@@ -1,15 +1,19 @@
 queue_rules:
   - name: default
-    conditions:
+    queue_conditions:
+      - author=github-actions[bot]
+      - files~=(bitrise.yml)
+    merge_conditions:
       - check-success=Bitrise
+    merge_method: rebase
 
 pull_request_rules:
   - name: Resolve conflict
     conditions:
       - conflict
     actions:
-        comment:
-          message: This pull request has conflicts when rebasing. Could you fix it @{{author}}?
+      comment:
+        message: This pull request has conflicts when rebasing. Could you fix it @{{author}}?
   - name: github-actions
     conditions:
       - author=github-actions[bot]
@@ -19,5 +23,3 @@ pull_request_rules:
         type: APPROVE
         message: Github-action[bot] 💪
       queue:
-        method: rebase
-        name: default
